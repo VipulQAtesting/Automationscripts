@@ -1,0 +1,125 @@
+from selenium import webdriver
+from selenium.common import NoSuchElementException
+import pytest
+
+from pynput.keyboard import Key, Controller
+from selenium.webdriver.support import wait
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+@pytest.fixture()
+def test_setupforannouncement():
+    global driver
+    import time
+    global time
+    from selenium.webdriver.chrome.service import Service as ChromeService
+    from selenium.webdriver.common.by import By
+    global By
+    from webdriver_manager.chrome import ChromeDriverManager
+
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+    driver.implicitly_wait(20)
+
+def test_pvscannegative(test_setupforannouncement):
+    driver.get("https://www.devpropvivo.com")
+    time.sleep(10)
+
+    Login_button = driver.find_element(by=By.CSS_SELECTOR, value="#propVivoLoginBtn")
+    Login_button.click()
+    try:
+        emailfield = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH,
+                                              '/html[1]/body[1]/app-root[1]/app-login[1]/div[1]/div[1]/div[2]/form[1]/div[1]/mat-form-field[1]/div[1]/div[1]/div[1]/input[1]'))
+        )
+        print("Form submitted successfully!")
+    except Exception as e:
+
+        print("Form submission failed:", e)
+
+    time.sleep(3)
+
+    Email_box = driver.find_element(by=By.ID, value="mat-input-0")
+    Email_box.send_keys("vipulkadam.vk9@gmail.com")
+    time.sleep(1)
+    Password_box = driver.find_element(by=By.ID, value="mat-input-1")
+    Password_box.send_keys("Vipul@123")
+    time.sleep(2)
+    Login_button = driver.find_element(by=By.CSS_SELECTOR,
+                                       value="body > app-root > app-login > div > div > div.col-md-6.login-form-cotainer > form > button")
+    Login_button.click()
+    time.sleep(10)
+    try:
+        create = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, '//body//app-root//header//ul//a[1]'))
+        )
+        print("Form submitted successfully!")
+    except Exception as e:
+        # Error handling if success message doesn't appear within the specified time
+        print("Form submission failed:", e)
+
+    # You can also validate by checking for errors on the form
+    # For example, if there's an error message displayed for invalid input
+    try:
+        error_message = driver.find_element(By.ID, 'error_message')
+        print("Error occurred:", error_message.text)
+    except NoSuchElementException:
+        print("No errors detected. Form submitted successfully!")
+    driver.maximize_window()
+    time.sleep(2)
+
+    manageassociation= driver.find_element(by=By.XPATH, value="//span[normalize-space()='Manage Association']")
+    manageassociation.click()
+    time.sleep(2)
+    Announcement= driver.find_element(by=By.XPATH, value="//a[normalize-space()='Announcements']")
+    Announcement.click()
+
+    try:
+        copy = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, '//tbody/tr[1]/td[4]/span[1]/span[1]/ul[1]/li[2]/a[1]/i[1]'))
+        )
+        print("Form submitted successfully!")
+    except Exception as e:
+        # Error handling if success message doesn't appear within the specified time
+        print("Form submission failed:", e)
+
+
+    Searchbox= driver.find_element(by=By.XPATH, value="//body//app-root//app-main//app-announcements//div//div//div//div//input[@placeholder='Search here...']")
+    Searchbox.send_keys("Announcement")
+    time.sleep(4)
+    searchcross= driver.find_element(by=By.XPATH, value="//body/app-root/app-main/app-announcements/div/div/div/div/span/i[1]")
+    searchcross.click()
+    time.sleep(3)
+    draft_button=driver.find_element(by=By.XPATH, value="//span[normalize-space()='Draft']")
+    draft_button.click()
+    try:
+        editbutton= WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, '//tbody/tr[1]/td[5]/span[1]/span[1]/ul[1]/li[1]/a[1]/i[1]'))
+        )
+        print("element visible")
+    except Exception as e:
+        # Error handling if success message doesn't appear within the specified time
+        print("element loacating failed:", e)
+
+    Addbutton= driver.find_element(by=By.XPATH, value="/html[1]/body[1]/app-root[1]/app-main[1]/app-announcements[1]/div[1]/div[1]/div[2]/button[1]")
+    Addbutton.click()
+    time.sleep(3)
+    driver.find_element(by=By.XPATH, value="//button[@mattooltip='Add Announcement']//span//i")
+    time.sleep(2)
+    target_elementcancel = driver.find_element(by=By.XPATH, value="//button[normalize-space()='Cancel']")
+    driver.execute_script("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });",
+                          target_elementcancel)
+    time.sleep(2)
+
+    Publishbutton= driver.find_element(by=By.XPATH, value="//button[normalize-space()='Publish']")
+    Publishbutton.click()
+    time.sleep(2)
+    cancelbutton= driver.find_element(by=By.XPATH, value="//button[normalize-space()='Cancel']")
+    cancelbutton.click()
+
+    try:
+        draftbutton= WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, '/html[1]/body[1]/app-root[1]/app-main[1]/app-announcements[1]/div[1]/div[2]/div[1]/div[2]/span[1]'))
+        )
+        print("element visible")
+    except Exception as e:
+        # Error handling if success message doesn't appear within the specified time
+        print("element loacating failed:", e)
